@@ -17,7 +17,7 @@ def format_multiline_text(original_text = '')
     last_wrapped_index = wrap_to_index + 1
   end
 
-  text_array.join("\n")
+  last_wrapped_index == 0 ? "|  |" : text_array.join("\n")
 end
 
 def print_in_box(user_text = '')
