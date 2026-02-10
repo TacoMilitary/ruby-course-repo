@@ -1,5 +1,7 @@
-def is_odd?(check_int=0)
-  check_int.abs % 2 != 0
+# frozen_string_literal: true
+
+def is_odd?(check_int = 0)
+  check_int.abs.odd?
 end
 
 puts is_odd?(2)

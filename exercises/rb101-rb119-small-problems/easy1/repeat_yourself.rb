@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def repeat(repeated_string = '', repeat_times = 1)
   repeat_times = 1 if repeat_times <= 0
   repeat_times.times { puts repeated_string }
