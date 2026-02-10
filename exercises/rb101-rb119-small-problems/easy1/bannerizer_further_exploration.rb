@@ -1,14 +1,17 @@
 # frozen_string_literal: true
+MAX_TEXT_WIDTH = 76
 
 def format_multiline_text(original_text = '')
   last_wrapped_index = 0
-  final_char_index = original_text.length - 1
+  original_length = original_text.length
+  final_char_index = original_length - 1
   text_array = []
   until last_wrapped_index >= final_char_index
-    wrap_to_index = last_wrapped_index + (76 - 1).clamp(0, final_char_index)
+    wrap_to_index = [last_wrapped_index + (MAX_TEXT_WIDTH - 1), final_char_index].min
+
     wrapped_unformatted_text = original_text[last_wrapped_index..wrap_to_index]
 
-    remaining_whitespace = 76.clamp(0, original_text.length) - wrapped_unformatted_text.length
+    remaining_whitespace = [MAX_TEXT_WIDTH, original_length].min - wrapped_unformatted_text.length
 
     formatted_line = "| #{wrapped_unformatted_text}#{' ' * remaining_whitespace} |"
 
@@ -17,12 +20,13 @@ def format_multiline_text(original_text = '')
     last_wrapped_index = wrap_to_index + 1
   end
 
-  last_wrapped_index.zero? ? '|  |' : text_array.join("\n")
+  text_array.join("\n")
 end
 
-def print_in_box(user_text = '')
-  formatted_user_text = format_multiline_text(user_text) # "| #{user_text} |"
-  text_max_length = user_text.length.clamp(0, 76)
+def print_in_box(user_text)
+  formatted_user_text = (user_text == '' || user_text.nil?) ? '|  |' : format_multiline_text(user_text) # "| #{user_text} |"
+
+  text_max_length = user_text.length.clamp(0, MAX_TEXT_WIDTH)
 
   formatted_empty_text = "| #{' ' * text_max_length} |"
   formatted_box_edge = "+-#{'-' * text_max_length}-+"
