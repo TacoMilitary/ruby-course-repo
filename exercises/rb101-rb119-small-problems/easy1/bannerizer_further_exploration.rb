@@ -3,13 +3,13 @@
 def format_multiline_text(original_text = '')
   last_wrapped_index = 0
   final_char_index = original_text.length - 1
-  text_array = Array.new
+  text_array = []
   until last_wrapped_index >= final_char_index
     wrap_to_index = last_wrapped_index + (76 - 1).clamp(0, final_char_index)
     wrapped_unformatted_text = original_text[last_wrapped_index..wrap_to_index]
 
     remaining_whitespace = 76.clamp(0, original_text.length) - wrapped_unformatted_text.length
-    
+
     formatted_line = "| #{wrapped_unformatted_text}#{' ' * remaining_whitespace} |"
 
     text_array.push(formatted_line)
@@ -17,11 +17,11 @@ def format_multiline_text(original_text = '')
     last_wrapped_index = wrap_to_index + 1
   end
 
-  last_wrapped_index == 0 ? "|  |" : text_array.join("\n")
+  last_wrapped_index.zero? ? '|  |' : text_array.join("\n")
 end
 
 def print_in_box(user_text = '')
-  formatted_user_text = format_multiline_text(user_text) #"| #{user_text} |"
+  formatted_user_text = format_multiline_text(user_text) # "| #{user_text} |"
   text_max_length = user_text.length.clamp(0, 76)
 
   formatted_empty_text = "| #{' ' * text_max_length} |"
