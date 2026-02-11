@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 def reversed_number(n = 1)
-  n = n.positive? ? n.to_s : '1'
   num_type = n.is_a?(Integer) ? :to_i : :to_f
+  n = n.positive? ? n.to_s : '1'
   n.reverse.public_send(num_type)
 end
 
