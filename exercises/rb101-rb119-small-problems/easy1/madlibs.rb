@@ -5,7 +5,21 @@ ORIGINAL_STORY =
 
 def receive_user_text(prompt)
   print prompt
-  gets.chomp.downcase.strip
+
+  loop do
+    response_valid = true
+    user_response = gets.chomp.downcase.strip
+    
+    user_response.each_char do |c|
+      response_valid = false unless ('a'..'z') === c
+    end
+
+    if response_valid
+      return user_response
+    else
+      print '> '
+    end
+  end
 end
 
 def user_madlibs
