@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-ORIGINAL_STORY = 
+
+ORIGINAL_STORY =
   "Yesterday, I found a (adjective) (noun) in my backyard.\nWithout thinking, I decided to (verb) it (adverb).\nI’ll never forget what happened next!"
 
 def receive_user_text(prompt)
@@ -30,4 +31,4 @@ def user_madlibs
   puts "\"#{new_story}\""
 end
 
-user_madlibs()
+user_madlibs
