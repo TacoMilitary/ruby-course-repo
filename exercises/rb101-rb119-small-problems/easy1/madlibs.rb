@@ -14,6 +14,7 @@ def receive_user_text(prompt)
     user_response = gets.chomp.downcase.strip
 
     return user_response if valid_text?(user_response)
+
     print '> '
   end
 end
