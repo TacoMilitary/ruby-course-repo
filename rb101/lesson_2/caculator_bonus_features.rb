@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+require 'yaml'
+
+PROMPT_TEXTS = YAML.load_file('calculator_texts.yml')
+
+p PROMPT_TEXTS
+
 def prompt(message)
   Kernel.puts("=> #{message}")
 end
@@ -26,13 +32,13 @@ def operation_to_message(op)
   verb
 end
 
-prompt("Welcome to the Calculator! Enter your name:")
+prompt(PROMPT_TEXTS['intro'])
 
 name = ''
 loop do
   name = Kernel.gets().chomp()
-  if name.empty?()
-    prompt("Make sure to use a valid name.")
+  if name.strip().empty?()
+    prompt(PROMPT_TEXTS['invalid_name'])
   else
     break
   end
@@ -43,42 +49,34 @@ prompt("Hi, #{name}!")
 loop do
   number1 = ''
   loop do
-    prompt("What's the first number?")
+    prompt(PROMPT_TEXTS['first_num'])
     number1 = Kernel.gets().chomp()
     if valid_number?(number1)
       break
     else
-      prompt("Hmm... that doesn't look like a valid number.")
+      prompt(PROMPT_TEXTS['invalid_number'])
     end
   end
 
   number2 = ''
   loop do
-    prompt("What is the second number?")
+    prompt(PROMPT_TEXTS['second_num'])
     number2 = Kernel.gets().chomp()
     if valid_number?(number2)
       break
     else
-      prompt("Hmm... that doesn't look like a valid number.")
+      prompt(PROMPT_TEXTS['invalid_number'])
     end
   end
 
-  operator_prompt = <<-HEREDOC
-What operation would you like to perform?
-1) add
-2) subtract
-3) multiply
-4) divide
-HEREDOC
-
-  prompt(operator_prompt)
+  prompt(PROMPT_TEXTS['operator_prompt'])
   operator = ''
   loop do
     operator = Kernel.gets().chomp()
     if %w(1 2 3 4).include?(operator)
       break
     else
-      prompt("Must choose 1, 2, 3, or 4.")
+      prompt(PROMPT_TEXTS['invalid_operator'])
     end
   end
   
@@ -97,9 +95,9 @@ HEREDOC
 
   prompt("The result is #{result}")
   
-  prompt("Do you want to perform another calculation? (Y to calculate again)")
+  prompt(PROMPT_TEXTS['repeat_prompt'])
   answer = Kernel.gets().chomp()
   break unless answer.downcase().start_with?('y')
 end
 
-prompt("Thank you for using the calculator. Good bye!")
+prompt(PROMPT_TEXTS['goodbye_message'])
