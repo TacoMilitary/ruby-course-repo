@@ -2,9 +2,13 @@
 
 require 'yaml'
 
+DEFAULT_LNG = 'en'
 PROMPT_TEXTS = YAML.load_file('calculator_texts.yml')
+user_language = DEFAULT_LNG
 
-p PROMPT_TEXTS
+def retrieve_lng(prompt)
+  PROMPT_TEXTS[prompt][user_language] || PROMPT_TEXTS[prompt][DEFAULT_LNG]
+end
 
 def prompt(message)
   Kernel.puts("=> #{message}")
@@ -32,13 +36,13 @@ def operation_to_message(op)
   verb
 end
 
-prompt(PROMPT_TEXTS['intro'])
+prompt(retrieve_lng('intro'))
 
 name = ''
 loop do
   name = Kernel.gets().chomp()
   if name.strip().empty?()
-    prompt(PROMPT_TEXTS['invalid_name'])
+    prompt(retrieve_lng('invalid_name'))
   else
     break
   end
@@ -49,34 +53,34 @@ prompt("Hi, #{name}!")
 loop do
   number1 = ''
   loop do
-    prompt(PROMPT_TEXTS['first_num'])
+    prompt(retrieve_lng('first_num'))
     number1 = Kernel.gets().chomp()
     if valid_number?(number1)
       break
     else
-      prompt(PROMPT_TEXTS['invalid_number'])
+      prompt(retrieve_lng('invalid_number'))
     end
   end
 
   number2 = ''
   loop do
-    prompt(PROMPT_TEXTS['second_num'])
+    prompt(retrieve_lng('second_num'))
     number2 = Kernel.gets().chomp()
     if valid_number?(number2)
       break
     else
-      prompt(PROMPT_TEXTS['invalid_number'])
+      prompt(retrieve_lng('invalid_number'))
     end
   end
 
-  prompt(PROMPT_TEXTS['operator_prompt'])
+  prompt(retrieve_lng('operator_prompt'))
   operator = ''
   loop do
     operator = Kernel.gets().chomp()
     if %w(1 2 3 4).include?(operator)
       break
     else
-      prompt(PROMPT_TEXTS['invalid_operator'])
+      prompt(retrieve_lng('invalid_operator'))
     end
   end
   
@@ -95,9 +99,9 @@ loop do
 
   prompt("The result is #{result}")
   
-  prompt(PROMPT_TEXTS['repeat_prompt'])
+  prompt(retrieve_lng('repeat_prompt'))
   answer = Kernel.gets().chomp()
   break unless answer.downcase().start_with?('y')
 end
 
-prompt(PROMPT_TEXTS['goodbye_message'])
+prompt(retrieve_lng('goodbye_message'))
