@@ -1,0 +1,45 @@
+intro: 
+  en: 'Welcome to the Calculator! Enter your name:'
+  es: '¡Bienvenido a la Calculadora! Introduce tu nombre:'
+
+invalid_name: 
+  en: 'Make sure to use a valid name.'
+  es: 'Asegúrese de utilizar un nombre válido.'
+
+invalid_number: 
+  en: "Hmm... that doesn't look like a valid number."
+  es: 'Hmm... ese no parece un número válido.'
+
+first_num: 
+  en: "What is the first number?"
+  es: '¿Cual es el primer numero?'
+
+second_num: 
+  en: "What is the second number?"
+  es: '¿Cual es el segundo numero?'
+
+operator_prompt:
+  en: |
+   What operation would you like to perform?
+    1) add
+    2) subtract
+    3) multiply
+    4) divide
+  es: |
+   ¿Qué operación le gustaría realizar?
+    1) suma
+    2) sustraer
+    3) multiplicar
+    4) dividir
+
+invalid_operator: 
+  en: 'Must choose 1, 2, 3, or 4.'
+  es: 'Debe elegir 1, 2, 3 o 4.'
+
+repeat_request: 
+  es: 'Do you want to perform another calculation? (Y to calculate again)'
+  en: '¿Quieres realizar otro cálculo? (Y para calcular de nuevo)'
+
+goodbye_message: 
+  en: 'Thank you for using the calculator. Good bye!'
+  es: 'Gracias por usar la calculadora. ¡Adiós!'
