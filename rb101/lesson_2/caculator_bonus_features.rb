@@ -5,6 +5,9 @@ def prompt(message)
 end
 
 def valid_number?(num_txt)
+  # if the user inputs a string that begins with 0, assume they want to input 0.
+  # this mimics the behavior of #to_i such that if you input a number before non-number text
+  # it will use the first valid number and ignore the rest of the string
   num_txt.start_with?('0') ? true : num_txt.to_i != 0
 end
 
