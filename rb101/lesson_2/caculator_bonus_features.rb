@@ -5,7 +5,7 @@ def prompt(message)
 end
 
 def valid_number?(num_txt)
-  num_text.start_with?('0') ? true : num_txt.to_i != 0
+  num_txt.start_with?('0') ? true : num_txt.to_i != 0
 end
 
 def operation_to_message(op)
