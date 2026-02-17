@@ -35,21 +35,21 @@ def loan_calculator
   rate_response = prompt_user(INTEREST_APR_PROMPT).downcase.strip
   rate_confirmation_reply = RATE_RESPONSES[rate_response] || DEFAULT_RATE_RESPONSE
   puts "#{rate_confirmation_reply}\n"
-  
+
   monthly_rate = 0.0
   final_monthly = 0.0
-  if rate_confirmation_reply != DEFAULT_RATE_RESPONSE
+  if rate_confirmation_reply == DEFAULT_RATE_RESPONSE
+    final_monthly = loan_p / loan_months
+  else
     if rate_response == 'apr'
       monthly_rate = prompt_user(APR_PROMPT).to_f / 12.0
     else
       monthly_rate = prompt_user(INTEREST_PROMPT).to_f
     end
     monthly_rate /= 100
-    final_monthly = loan_p * ( monthly_rate / (1 - (1 + monthly_rate)**(-loan_months)) )
-  else
-    final_monthly = loan_p / loan_months
+    final_monthly = loan_p * (monthly_rate / (1 - ((1 + monthly_rate)**(-loan_months))))
   end
-  
+
   number_to_display = format_number(final_monthly)
   puts "Your monthly payment comes out to $#{number_to_display}."
 end
