@@ -29,7 +29,7 @@ end
 
 def loan_calculator
   puts 'Hello! Welcome the mortage calculator!'
-  
+
   loan_p = prompt_user(LOAN_PRINCIPAL_PROMPT).to_f
   loan_months = prompt_user(LOAN_TERM_PROMPT).to_f
 
