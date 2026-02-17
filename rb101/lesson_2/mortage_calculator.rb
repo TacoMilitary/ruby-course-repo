@@ -4,12 +4,12 @@ LOAN_PRINCIPAL_PROMPT = 'How much is your Loan Principal?'
 LOAN_TERM_PROMPT = 'How many months is your Loan Term?'
 INTEREST_APR_PROMPT = <<-HEREDOC
 Will we be using an Interest Rate or an APR?
- (interest)
+ (interest)?
  (apr)?
 HEREDOC
 
-APR_PROMPT = 'What is the your APR?'
-INTEREST_PROMPT = 'What is your Interest Rate?'
+APR_PROMPT = 'What is the your APR? (%)'
+INTEREST_PROMPT = 'What is your Interest Rate? (%)'
 
 DEFAULT_RATE_RESPONSE = "Okay, so we're not including any Rates."
 RATE_RESPONSES = {
@@ -29,6 +29,7 @@ end
 
 def loan_calculator
   puts 'Hello! Welcome the mortage calculator!'
+  
   loan_p = prompt_user(LOAN_PRINCIPAL_PROMPT).to_f
   loan_months = prompt_user(LOAN_TERM_PROMPT).to_f
 
@@ -50,8 +51,7 @@ def loan_calculator
     final_monthly = loan_p * (monthly_rate / (1 - ((1 + monthly_rate)**(-loan_months))))
   end
 
-  number_to_display = format_number(final_monthly)
-  puts "Your monthly payment comes out to $#{number_to_display}."
+  puts "Your monthly payment comes out to $#{format_number(final_monthly)}."
 end
 
 loan_calculator
