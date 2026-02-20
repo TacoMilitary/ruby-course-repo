@@ -4,6 +4,7 @@ require 'yaml'
 require 'pry'
 
 MONTHS_YEAR = 12.0
+PERCENT_DIVISOR = 100.0
 
 TERMINAL_TXT = YAML.load_file('mortage_texts.yml')
 
@@ -73,6 +74,10 @@ def clear_screen
   end
 end
 
+def divide_screen
+  puts " \n----------"
+end
+
 def get_number(prompt = 'Give me a number.', error_subject = 'Number', usd_expected: false)
   loop do
     valid = true
@@ -102,7 +107,7 @@ def get_rate_type
     response = prompt_user(TERMINAL_TXT['rate_type_ask']).downcase
     confirmation = TERMINAL_TXT['rate_replies'][response]
     if confirmation
-      puts confirmation
+      puts "\n#{confirmation}"
       return response
     end
 
@@ -110,41 +115,47 @@ def get_rate_type
   end
 end
 
-=begin
-def calc_month_payment(loan_amount, interest_apr)
-  
+def calc_month_payment(loan_amount, loan_months, rate_type, rate)
+  pay = 0
+  if rate_type == 'none' || rate == 0
+    pay = loan_amount / loan_months
+  else
+    monthly_rate = rate
+    if rate_type == 'apr'
+      monthly_rate /= MONTHS_YEAR
+    end
+
+    monthly_rate /= PERCENT_DIVISOR
+    pay = loan_amount * (monthly_rate / (1 - ((1 + monthly_rate)**(-loan_months))))
+  end
+
+  pay
 end
-=end
 
 def loan_calculator
   clear_screen
   puts TERMINAL_TXT['welcome']
 
-  loan_p = get_number(TERMINAL_TXT['loan_ask'], 'Loan', usd_expected: true)
+  divide_screen
+  loan_amount = get_number(TERMINAL_TXT['loan_ask'], 'Loan', usd_expected: true)
+
+  divide_screen
   loan_months = get_number(TERMINAL_TXT['term_ask'], 'Loan Term')
 
+  divide_screen
   rate_type = get_rate_type
 
-=begin
-  rate_response = prompt_user(TERMINAL_TXT['rate_type_ask']).downcase
-  rate_confirmation_reply = RATE_RESPONSES[rate_response] || DEFAULT_RATE_RESPONSE
-  puts "#{rate_confirmation_reply}\n"
-=end
-  monthly_rate = 0.0
-  final_monthly = 0.0
-  if rate_confirmation_reply == DEFAULT_RATE_RESPONSE
-    final_monthly = loan_p / loan_months
-  else
-    if rate_response == 'apr'
-      monthly_rate = prompt_user(APR_PROMPT).to_f / MONTHS_YEAR
-    else
-      monthly_rate = prompt_user(INTEREST_PROMPT).to_f
-    end
-    monthly_rate /= 100
-    final_monthly = loan_p * (monthly_rate / (1 - ((1 + monthly_rate)**(-loan_months))))
+  rate_percent = 0.0
+  unless rate_type == 'none'
+    divide_screen
+    correct_prompt = TERMINAL_TXT["#{rate_type}_ask"]
+    rate_percent = get_number(correct_prompt, 'Rate')
   end
+  
+  divide_screen
+  puts "Your monthly payment comes out to $#{calc_month_payment(loan_amount, loan_months, rate_type, rate_percent)}"
 
-  puts "Your monthly payment comes out to $#{format_number(final_monthly)}."
+  divide_screen
 end
 
 loan_calculator
