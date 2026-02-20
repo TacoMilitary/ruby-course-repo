@@ -10,7 +10,7 @@ TERMINAL_TXT = YAML.load_file('mortage_texts.yml')
 def prompt_user(prompt)
   puts prompt
   print '> '
-  gets.chomp
+  gets.chomp.strip
 end
 
 def format_number(n)
@@ -73,14 +73,14 @@ def clear_screen
   end
 end
 
-def request_number(prompt='Give me a number.', error_subject='Number')
+def get_number(prompt = 'Give me a number.', error_subject = 'Number', usd_expected: false)
   loop do
     valid = true
     error = nil
 
     response = prompt_user(prompt)
     # If users input a dollar sign it will be cleaned.
-    remove_usd_prefix!(response)
+    remove_usd_prefix!(response) if usd_expected
 
     unless num_input?(response) && two_decimal_input?(response)
       valid = false
@@ -97,18 +97,39 @@ def request_number(prompt='Give me a number.', error_subject='Number')
   end
 end
 
+def get_rate_type
+  loop do
+    response = prompt_user(TERMINAL_TXT['rate_type_ask']).downcase
+    confirmation = TERMINAL_TXT['rate_replies'][response]
+    if confirmation
+      puts confirmation
+      return response
+    end
+
+    puts '[ERROR]: That is not a valid choice!'
+  end
+end
+
+=begin
+def calc_month_payment(loan_amount, interest_apr)
+  
+end
+=end
+
 def loan_calculator
   clear_screen
   puts TERMINAL_TXT['welcome']
 
-  loan_p = request_number(TERMINAL_TXT['loan_ask'], 'Loan')
-  loan_months = request_number(TERMINAL_TXT['term_ask'], 'Loan Term')
+  loan_p = get_number(TERMINAL_TXT['loan_ask'], 'Loan', usd_expected: true)
+  loan_months = get_number(TERMINAL_TXT['term_ask'], 'Loan Term')
 
-  return
-  rate_response = prompt_user(TERMINAL_TXT['rate_type_ask']).downcase.strip
+  rate_type = get_rate_type
+
+=begin
+  rate_response = prompt_user(TERMINAL_TXT['rate_type_ask']).downcase
   rate_confirmation_reply = RATE_RESPONSES[rate_response] || DEFAULT_RATE_RESPONSE
   puts "#{rate_confirmation_reply}\n"
-
+=end
   monthly_rate = 0.0
   final_monthly = 0.0
   if rate_confirmation_reply == DEFAULT_RATE_RESPONSE

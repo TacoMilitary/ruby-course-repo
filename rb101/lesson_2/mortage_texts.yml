@@ -10,7 +10,11 @@ rate_type_ask: |
   (apr)?
   (none)?
 
-rate_answers:
+rate_replies:
   interest: "So we're working with Interest Rate."
   apr: "So we're using the Annual Percentage Rate."
   none: "Okay, so we're not including any Rates."
+
+apr_ask: 'What is the your APR? (%)'
+
+interest_ask: 'What is your Interest Rate? (%)'
