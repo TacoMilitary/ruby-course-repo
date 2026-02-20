@@ -29,7 +29,8 @@ def num_input?(s)
   end
 
   # Ensures all characters of the string
-  # are numbers.
+  # are numbers. Returns false if a character
+  # is outside of the string numbers range.
   split_string.each do |str|
     str.each_char do |c|
       return false unless ('0'..'9').include?(c)
@@ -53,9 +54,13 @@ def two_decimal_input?(s)
 end
 
 def remove_usd_prefix!(s)
-  possible_prefixes = %w(-$ $ +$)
-  possible_prefixes.each do |pre|
-    s.delete_prefix!(pre)
+  dollar_index = s.index('$')
+
+  # Only remove it if the dollar sign is at
+  # the beginning of the string. + 1 index, to account for 
+  # '-$' and '+$'
+  if dollar_index && dollar_index <= 1
+    s[dollar_index] = ''
   end
 end
 
@@ -68,12 +73,12 @@ def clear_screen
   end
 end
 
-def get_loan_amount
+def request_number(prompt='Give me a number.', error_subject='Number')
   loop do
     valid = true
     error = nil
 
-    response = prompt_user(TERMINAL_TXT['loan_ask'])
+    response = prompt_user(prompt)
     # If users input a dollar sign it will be cleaned.
     remove_usd_prefix!(response)
 
@@ -84,7 +89,7 @@ def get_loan_amount
 
     unless response.to_i > 0
       valid = false
-      error ||= '[ERROR]: Loan must be greater than zero.'
+      error ||= "[ERROR]: #{error_subject} must be greater than zero."
     end
 
     puts error if error
@@ -92,17 +97,14 @@ def get_loan_amount
   end
 end
 
-def get_loan_months
-  
-end
-
 def loan_calculator
   clear_screen
   puts TERMINAL_TXT['welcome']
 
-  loan_p = get_loan_amount
-  loan_months = prompt_user(TERMINAL_TXT['term_ask']).to_f
+  loan_p = request_number(TERMINAL_TXT['loan_ask'], 'Loan')
+  loan_months = request_number(TERMINAL_TXT['term_ask'], 'Loan Term')
 
+  return
   rate_response = prompt_user(TERMINAL_TXT['rate_type_ask']).downcase.strip
   rate_confirmation_reply = RATE_RESPONSES[rate_response] || DEFAULT_RATE_RESPONSE
   puts "#{rate_confirmation_reply}\n"
