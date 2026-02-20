@@ -1,0 +1,16 @@
+welcome: 'Hello! Welcome the mortage calculator!'
+
+loan_ask: 'How much is your Loan Principal?'
+
+term_ask: 'How many months is your Loan Term?'
+
+rate_type_ask: |
+ Will we be using an Interest Rate or an APR?
+  (interest)?
+  (apr)?
+  (none)?
+
+rate_answers:
+  interest: "So we're working with Interest Rate."
+  apr: "So we're using the Annual Percentage Rate."
+  none: "Okay, so we're not including any Rates."
