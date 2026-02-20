@@ -41,13 +41,14 @@ def num_input?(s)
   true
 end
 
-def two_decimal_input?(s)
-  # Numbers with decimals, should not have more than two places.
-  # Otherwise, return false. To be used after validating
-  # that the input is a number at all.
+def less_decimals?(s, places = 0)
+  # String numbers with decimals, should not have more
+  # than X number of places. Otherwise, return false.
+  # To be used after validating that the input is
+  # a number at all.
   valid_decimal = true
   decimal_place = s.index('.')
-  if decimal_place && s[decimal_place..-1].length > 3
+  if decimal_place && (s[decimal_place..-1].length - 1) > places
     valid_decimal = false
   end
 
@@ -58,7 +59,7 @@ def remove_usd_prefix!(s)
   dollar_index = s.index('$')
 
   # Only remove it if the dollar sign is at
-  # the beginning of the string. + 1 index, to account for 
+  # the beginning of the string. + 1 index, to account for
   # '-$' and '+$'
   if dollar_index && dollar_index <= 1
     s[dollar_index] = ''
@@ -78,27 +79,27 @@ def divide_screen
   puts " \n----------"
 end
 
-def get_number(prompt = 'Give me a number.', error_subject = 'Number', usd_expected: false)
+def error_message(message = 'Unknown error!')
+  puts "[ERROR]: #{message}"
+end
+
+def get_num(prompt = 'Give me a number.', expected_type = '', &validation_block)
   loop do
-    valid = true
-    error = nil
-
     response = prompt_user(prompt)
-    # If users input a dollar sign it will be cleaned.
-    remove_usd_prefix!(response) if usd_expected
+    remove_usd_prefix!(response) if expected_type == 'usd'
+    response.delete_suffix!('%') if expected_type == 'percent'
 
-    unless num_input?(response) && two_decimal_input?(response)
-      valid = false
-      error ||= '[ERROR]: This is not a valid number!'
+    error = num_input?(user_response) ? nil : TERMINAL_TXT['number_error']
+
+    if validation_block
+      error = validation_block.call(response)
     end
 
-    unless response.to_i > 0
-      valid = false
-      error ||= "[ERROR]: #{error_subject} must be greater than zero."
+    if error
+      error_message(error)
+    else
+      return response.to_f
     end
-
-    puts error if error
-    return response.to_f if valid
   end
 end
 
@@ -111,7 +112,7 @@ def get_rate_type
       return response
     end
 
-    puts '[ERROR]: That is not a valid choice!'
+    error_message(TERMINAL_TXT['choice_error'])
   end
 end
 
@@ -137,10 +138,22 @@ def loan_calculator
   puts TERMINAL_TXT['welcome']
 
   divide_screen
-  loan_amount = get_number(TERMINAL_TXT['loan_ask'], 'Loan', usd_expected: true)
-
+  loan_amount = get_num(TERMINAL_TXT['loan_ask']) do |user_response|
+    if !less_decimals?(user_response, 2)
+      TERMINAL_TXT['decimal_error']
+    elsif user_response.to_i <= 0
+      TERMINAL_TXT['loan_zero_error']
+    end
+  end
+  
   divide_screen
-  loan_months = get_number(TERMINAL_TXT['term_ask'], 'Loan Term')
+  loan_months = get_num(TERMINAL_TXT['term_ask']) do |user_response|
+    if !less_decimals?(user_response, 0)
+      TERMINAL_TXT['decimal_error']
+    elsif user_response.to_i <= 0
+      TERMINAL_TXT['term_zero_error']
+    end
+  end
 
   divide_screen
   rate_type = get_rate_type

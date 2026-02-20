@@ -18,3 +18,13 @@ rate_replies:
 apr_ask: 'What is the your APR? (%)'
 
 interest_ask: 'What is your Interest Rate? (%)'
+
+number_error: 'That is not a valid number!'
+
+decimal_error: 'Your number has too many decimals!'
+
+choice_error: 'That is not a valid choice!'
+
+loan_zero_error: 'Loan must be greater then zero!'
+
+term_zero_error: 'Term must be greater then zero!'
