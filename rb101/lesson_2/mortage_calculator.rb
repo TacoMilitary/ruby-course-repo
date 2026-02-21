@@ -8,6 +8,28 @@ PERCENT_DIVISOR = 100.0
 
 TERMINAL_TXT = YAML.load_file('mortage_texts.yml')
 
+AMOUNT_VALIDATION = Proc.new do |user_response|
+  if !less_decimals?(user_response, 2)
+    TERMINAL_TXT['decimal_error']
+  elsif user_response.to_i <= 0
+    TERMINAL_TXT['loan_zero_error']
+  end
+end
+
+TERM_VALIDATION = Proc.new do |user_response|
+  if !less_decimals?(user_response, 0)
+    TERMINAL_TXT['decimal_error']
+  elsif user_response.to_i <= 0
+    TERMINAL_TXT['term_zero_error']
+  end
+end
+
+RATE_VALIDATION = Proc.new do |user_response|
+  if user_response.to_i < 0
+    TERMINAL_TXT['rate_zero_error']
+  end
+end
+
 def prompt_user(prompt)
   puts prompt
   print '> '
@@ -83,15 +105,15 @@ def error_message(message = 'Unknown error!')
   puts "[ERROR]: #{message}"
 end
 
-def get_num(prompt = 'Give me a number.', expected_type = '', &validation_block)
+def get_num(prompt = 'Give me a number.', expected_type: '', &validation_block)
   loop do
     response = prompt_user(prompt)
     remove_usd_prefix!(response) if expected_type == 'usd'
     response.delete_suffix!('%') if expected_type == 'percent'
 
-    error = num_input?(user_response) ? nil : TERMINAL_TXT['number_error']
+    error = num_input?(response) ? nil : TERMINAL_TXT['number_error']
 
-    if validation_block
+    if !error && validation_block
       error = validation_block.call(response)
     end
 
@@ -113,6 +135,15 @@ def get_rate_type
     end
 
     error_message(TERMINAL_TXT['choice_error'])
+  end
+end
+
+def get_rate(rate_type)
+  unless rate_type == 'none'
+    correct_prompt = TERMINAL_TXT["#{rate_type}_ask"]
+    get_num(correct_prompt, expected_type: 'percent', &RATE_VALIDATION)
+  else
+    0.0
   end
 end
 
@@ -138,37 +169,19 @@ def loan_calculator
   puts TERMINAL_TXT['welcome']
 
   divide_screen
-  loan_amount = get_num(TERMINAL_TXT['loan_ask']) do |user_response|
-    if !less_decimals?(user_response, 2)
-      TERMINAL_TXT['decimal_error']
-    elsif user_response.to_i <= 0
-      TERMINAL_TXT['loan_zero_error']
-    end
-  end
+  loan_amount = get_num(TERMINAL_TXT['loan_ask'], expected_type: 'usd', &AMOUNT_VALIDATION)
   
   divide_screen
-  loan_months = get_num(TERMINAL_TXT['term_ask']) do |user_response|
-    if !less_decimals?(user_response, 0)
-      TERMINAL_TXT['decimal_error']
-    elsif user_response.to_i <= 0
-      TERMINAL_TXT['term_zero_error']
-    end
-  end
+  loan_months = get_num(TERMINAL_TXT['term_ask'], &TERM_VALIDATION) 
 
   divide_screen
   rate_type = get_rate_type
 
-  rate_percent = 0.0
-  unless rate_type == 'none'
-    divide_screen
-    correct_prompt = TERMINAL_TXT["#{rate_type}_ask"]
-    rate_percent = get_number(correct_prompt, 'Rate')
-  end
+  divide_screen
+  rate_percent = get_rate(rate_type)
   
   divide_screen
   puts "Your monthly payment comes out to $#{calc_month_payment(loan_amount, loan_months, rate_type, rate_percent)}"
-
-  divide_screen
 end
 
 loan_calculator

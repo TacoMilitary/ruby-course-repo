@@ -28,3 +28,5 @@ choice_error: 'That is not a valid choice!'
 loan_zero_error: 'Loan must be greater then zero!'
 
 term_zero_error: 'Term must be greater then zero!'
+
+rate_zero_error: 'Rate must be a positive number!'
