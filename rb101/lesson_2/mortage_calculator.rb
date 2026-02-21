@@ -145,6 +145,7 @@ end
 def get_rate(rate_type)
   rate = 0.0
   unless rate_type == 'none'
+    # Only divide the screen if text is actually displayed.
     divide_screen
     correct_prompt = TERMINAL_TXT["#{rate_type}_ask"]
     rate = get_num(correct_prompt, expected_type: 'percent', &RATE_VALIDATION)
