@@ -36,8 +36,13 @@ def prompt_user(prompt)
   gets.chomp.strip
 end
 
-def format_number(n)
-  n > n.to_i ? n.truncate(2) : n.to_i
+def n_to_usd(n)
+  formatted_num = n.to_f.truncate(2).to_s
+  # Adds 0 if truncated string only has . and x decimal
+  decimal_place = formatted_num.index('.')
+  formatted_num.concat('0') if formatted_num[decimal_place..-1].length <= 2
+
+  "$#{formatted_num}"
 end
 
 def num_input?(s)
@@ -140,6 +145,7 @@ end
 
 def get_rate(rate_type)
   unless rate_type == 'none'
+    divide_screen
     correct_prompt = TERMINAL_TXT["#{rate_type}_ask"]
     get_num(correct_prompt, expected_type: 'percent', &RATE_VALIDATION)
   else
@@ -169,19 +175,28 @@ def loan_calculator
   puts TERMINAL_TXT['welcome']
 
   divide_screen
-  loan_amount = get_num(TERMINAL_TXT['loan_ask'], expected_type: 'usd', &AMOUNT_VALIDATION)
-  
+  loan_amount = get_num(
+    TERMINAL_TXT['loan_ask'],
+    expected_type: 'usd',
+    &AMOUNT_VALIDATION
+  )
+
   divide_screen
-  loan_months = get_num(TERMINAL_TXT['term_ask'], &TERM_VALIDATION) 
+  loan_months = get_num(TERMINAL_TXT['term_ask'], &TERM_VALIDATION)
 
   divide_screen
   rate_type = get_rate_type
 
-  divide_screen
   rate_percent = get_rate(rate_type)
-  
+
   divide_screen
-  puts "Your monthly payment comes out to $#{calc_month_payment(loan_amount, loan_months, rate_type, rate_percent)}"
+  payment_amount = calc_month_payment(
+    loan_amount,
+    loan_months,
+    rate_type,
+    rate_percent
+  )
+  puts "#{TERMINAL_TXT['payment_statement']}#{n_to_usd(payment_amount)}"
 end
 
 loan_calculator
