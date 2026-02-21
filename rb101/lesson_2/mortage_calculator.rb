@@ -144,13 +144,14 @@ def get_rate_type
 end
 
 def get_rate(rate_type)
+  rate = 0.0
   unless rate_type == 'none'
     divide_screen
     correct_prompt = TERMINAL_TXT["#{rate_type}_ask"]
-    get_num(correct_prompt, expected_type: 'percent', &RATE_VALIDATION)
-  else
-    0.0
+    rate = get_num(correct_prompt, expected_type: 'percent', &RATE_VALIDATION)
   end
+
+  rate
 end
 
 def calc_month_payment(loan_amount, loan_months, rate_type, rate)
@@ -164,7 +165,9 @@ def calc_month_payment(loan_amount, loan_months, rate_type, rate)
     end
 
     monthly_rate /= PERCENT_DIVISOR
-    pay = loan_amount * (monthly_rate / (1 - ((1 + monthly_rate)**(-loan_months))))
+
+    subtract = (1 + monthly_rate)**(-loan_months)
+    pay = loan_amount * (monthly_rate / (1 - subtract))
   end
 
   pay
