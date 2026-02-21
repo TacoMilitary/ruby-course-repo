@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'yaml'
-require 'pry'
 
 MONTHS_YEAR = 12.0
 PERCENT_DIVISOR = 100.0
@@ -173,10 +172,7 @@ def calc_month_payment(loan_amount, loan_months, rate_type, rate)
   pay
 end
 
-def loan_calculator
-  clear_screen
-  puts TERMINAL_TXT['welcome']
-
+def prompt_loan_info
   divide_screen
   loan_amount = get_num(
     TERMINAL_TXT['loan_ask'],
@@ -192,14 +188,27 @@ def loan_calculator
 
   rate_percent = get_rate(rate_type)
 
-  divide_screen
-  payment_amount = calc_month_payment(
-    loan_amount,
-    loan_months,
-    rate_type,
-    rate_percent
-  )
-  puts "#{TERMINAL_TXT['payment_statement']}#{n_to_usd(payment_amount)}"
+  [loan_amount, loan_months, rate_type, rate_percent]
+end
+
+def loan_calculator
+  loop do
+    clear_screen
+    puts TERMINAL_TXT['welcome']
+
+    loan_amount, loan_months, rate_type, rate_percent = prompt_loan_info
+
+    divide_screen
+    payment_amount = calc_month_payment(
+      loan_amount, loan_months, rate_type, rate_percent
+    )
+
+    puts "#{TERMINAL_TXT['payment_statement']}#{n_to_usd(payment_amount)}"
+
+    divide_screen
+    calculate_again = prompt_user(TERMINAL_TXT['ask_calculate_again'])
+    break unless calculate_again.downcase == 'y'
+  end
 end
 
 loan_calculator

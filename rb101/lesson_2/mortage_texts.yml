@@ -1,4 +1,4 @@
-welcome: 'Hello! Welcome the mortage calculator!'
+welcome: 'Hello! Welcome the mortgage calculator!'
 
 loan_ask: 'How much is your Loan Principal?'
 
@@ -32,3 +32,9 @@ term_zero_error: 'Term must be greater then zero!'
 rate_zero_error: 'Rate must be a positive number!'
 
 payment_statement: 'Your monthly payment comes out to '
+
+ask_calculate_again: |
+  Would you like to calculate additional loans?
+    (Be sure to save what you have before the screen clears.)
+    (y)?
+    (.)?
