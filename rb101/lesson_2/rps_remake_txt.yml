@@ -3,16 +3,22 @@ before_shoot: |
   (rock)?
   (paper)?
   (scissors)?
+  
 
 after_shoot: '..SHOOT!!!!'
 
 win_message: 'WIN!'
-lose_message: 'LOSS!'
+lose_message: "LOSS!"
 draw_message: "DRAW! You've got to play again!"
+
+# match_explain: 'You chose [placeholder]! The CPU chose [placeholder]!'
+match_explain: '(You) [placeholder] | (CPU) [placeholder]'
 
 rematch_ask: |
  Would you like to play again?
   (y)?
   (n)?
+
+goodbye: 'GG!!'
 
 invalid_choice: You must choose one of the selections!

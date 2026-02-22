@@ -64,12 +64,27 @@ def match_outcome_get(player_1_rps, player_2_rps)
   end
 end
 
-def display_results(outcome)
-  case outcome
-  when 'win' then puts GAME_TXT['win_message']
-  when 'lose' then puts GAME_TXT['lose_message']
-  else puts GAME_TXT['draw_message']
-  end
+def replace_placeholders(text, *replacers)
+  dup_text = text.dup
+
+  replacers.each {|replacer| dup_text.sub!('[placeholder]', replacer)}
+
+  dup_text
+end
+
+def display_results(outcome, player_choice, cpu_choice)
+
+  result_message = case outcome
+                   when 'win'
+                    GAME_TXT['win_message']
+                   when 'lose'
+                    GAME_TXT['lose_message']
+                   else 
+                    GAME_TXT['draw_message']
+                   end
+
+  match_explain_text = replace_placeholders(GAME_TXT['match_explain'], player_choice.upcase, cpu_choice.upcase)
+  puts "\n#{result_message}\n\n#{match_explain_text}"
 end
 
 def ask_for_rematch?
@@ -99,14 +114,20 @@ def game_start
     
     computer_choice = cpu_rps_get
 
-    player_outcome = match_outcome_get(player_choice, computer_choice)
+    match_outcome = match_outcome_get(player_choice, computer_choice)
 
-    display_results
+    divide_screen
+    display_results(match_outcome, player_choice, computer_choice)
 
-    unless player_outcome == 'tie'
+    divide_screen
+    unless match_outcome == 'draw'
       continue_game = ask_for_rematch?
+      clear_screen if continue_game
     end
   end
+  
+  divide_screen
+  puts GAME_TXT['goodbye']
 end
 
 game_start
