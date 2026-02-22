@@ -1,0 +1,9 @@
+before_shoot: |
+ Rock, Paper Scissors..
+  (rock)?
+  (paper)?
+  (scissors)?
+
+after_shoot: '..SHOOT!!!!'
+
+invalid_choice: You must choose one of the selections!
