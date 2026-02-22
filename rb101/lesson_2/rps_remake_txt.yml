@@ -6,4 +6,13 @@ before_shoot: |
 
 after_shoot: '..SHOOT!!!!'
 
+win_message: 'WIN!'
+lose_message: 'LOSS!'
+draw_message: "DRAW! You've got to play again!"
+
+rematch_ask: |
+ Would you like to play again?
+  (y)?
+  (n)?
+
 invalid_choice: You must choose one of the selections!
